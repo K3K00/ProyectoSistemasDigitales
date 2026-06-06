@@ -1,0 +1,9 @@
+../Core/Src/main.c:81:5:main	8	static
+../Core/Src/main.c:102:6:SystemClock_Config	88	static
+../Core/Src/main.c:146:13:MX_GPIO_Init	40	static
+../Core/Src/main.c:183:6:CambiarModo	8	static
+../Core/Src/main.c:189:6:EjecutarSecuencia	16	static
+../Core/Src/main.c:225:6:VerificarSW1	16	static
+../Core/Src/main.c:244:6:VerificarSW2	16	static
+../Core/Src/main.c:263:6:VerificarSW3	16	static
+../Core/Src/main.c:288:6:Error_Handler	4	static,ignoring_inline_asm
