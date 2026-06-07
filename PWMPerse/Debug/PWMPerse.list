@@ -29,25 +29,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  00004010  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000086bd  00000000  00000000  00004040  2**0
+ 13 .debug_info   000086ab  00000000  00000000  00004040  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001523  00000000  00000000  0000c6fd  2**0
+ 14 .debug_abbrev 00001523  00000000  00000000  0000c6eb  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 000009c0  00000000  00000000  0000dc20  2**3
+ 15 .debug_aranges 000009c0  00000000  00000000  0000dc10  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000785  00000000  00000000  0000e5e0  2**0
+ 16 .debug_rnglists 00000785  00000000  00000000  0000e5d0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0001fbea  00000000  00000000  0000ed65  2**0
+ 17 .debug_macro  0001fbde  00000000  00000000  0000ed55  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000a5fe  00000000  00000000  0002e94f  2**0
+ 18 .debug_line   0000a5fe  00000000  00000000  0002e933  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c5048  00000000  00000000  00038f4d  2**0
+ 19 .debug_str    000c5032  00000000  00000000  00038f31  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000fdf95  2**0
+ 20 .comment      00000043  00000000  00000000  000fdf63  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  000026a8  00000000  00000000  000fdfd8  2**2
+ 21 .debug_frame  000026a8  00000000  00000000  000fdfa8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000006a  00000000  00000000  00100680  2**0
+ 22 .debug_line_str 0000006a  00000000  00000000  00100650  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -380,37 +380,19 @@ Disassembly of section .text:
 int main(void) {
  80004f4:	b580      	push	{r7, lr}
  80004f6:	af00      	add	r7, sp, #0
-	/* USER CODE END 1 */
 
-	/* MCU Configuration--------------------------------------------------------*/
-
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
 	HAL_Init();
  80004f8:	f000 fd26 	bl	8000f48 <HAL_Init>
-	/* USER CODE BEGIN Init */
-
-	/* USER CODE END Init */
-
-	/* Configure the system clock */
 	SystemClock_Config();
  80004fc:	f000 f826 	bl	800054c <SystemClock_Config>
-	/* USER CODE BEGIN SysInit */
-
-	/* USER CODE END SysInit */
-
-	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
  8000500:	f000 f91a 	bl	8000738 <MX_GPIO_Init>
 	MX_TIM4_Init();
  8000504:	f000 f88c 	bl	8000620 <MX_TIM4_Init>
-	/* USER CODE BEGIN 2 */
-	// Nos aseguramos de apagar las luces amarilla y verde, y de encender la roja
-	inicio(); // Prueba inicial del sistema
- 8000508:	f000 f952 	bl	80007b0 <inicio>
-	/* USER CODE END 2 */
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
+	inicio();
+ 8000508:	f000 f952 	bl	80007b0 <inicio>
+
 	while (1) {
 		CambiarModo();
  800050c:	f000 f988 	bl	8000820 <CambiarModo>
@@ -853,12 +835,12 @@ void inicio(void) {
  80007b0:	b580      	push	{r7, lr}
  80007b2:	b082      	sub	sp, #8
  80007b4:	af00      	add	r7, sp, #0
-// Obtenemos el valor máximo de ciclo de trabajo de la configuración del hgardware
+	// Obtenemos el valor máximo de ciclo de trabajo de la configuración del hgardware
 	uint16_t ciclomaximo = TIM4->ARR; // Valor máximo de ciclo de trabajo
  80007b6:	4b18      	ldr	r3, [pc, #96]	@ (8000818 <inicio+0x68>)
  80007b8:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
  80007ba:	80fb      	strh	r3, [r7, #6]
-// Configuramos el PWM para que inicie con los LED encendidos
+	// Configuramos el PWM para que inicie con los LED encendidos
 	TIM4->CCR1 = ciclomaximo; // LED verde al 100 %
  80007bc:	4a16      	ldr	r2, [pc, #88]	@ (8000818 <inicio+0x68>)
  80007be:	88fb      	ldrh	r3, [r7, #6]
@@ -867,11 +849,11 @@ void inicio(void) {
  80007c2:	4a15      	ldr	r2, [pc, #84]	@ (8000818 <inicio+0x68>)
  80007c4:	88fb      	ldrh	r3, [r7, #6]
  80007c6:	6393      	str	r3, [r2, #56]	@ 0x38
-	TIM4->CCR4 = ciclomaximo;
+	TIM4->CCR4 = ciclomaximo; // LED amarillo al 100%
  80007c8:	4a13      	ldr	r2, [pc, #76]	@ (8000818 <inicio+0x68>)
  80007ca:	88fb      	ldrh	r3, [r7, #6]
  80007cc:	6413      	str	r3, [r2, #64]	@ 0x40
-// Arrancamos el PWM
+	// Arrancamos el PWM
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1); // Inicio de la modulación PWM, LED verde
  80007ce:	2100      	movs	r1, #0
  80007d0:	4812      	ldr	r0, [pc, #72]	@ (800081c <inicio+0x6c>)
@@ -880,15 +862,15 @@ void inicio(void) {
  80007d6:	2104      	movs	r1, #4
  80007d8:	4810      	ldr	r0, [pc, #64]	@ (800081c <inicio+0x6c>)
  80007da:	f001 fbf1 	bl	8001fc0 <HAL_TIM_PWM_Start>
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4); // Inicio de la modulación PWM, LED amarillo
  80007de:	210c      	movs	r1, #12
  80007e0:	480e      	ldr	r0, [pc, #56]	@ (800081c <inicio+0x6c>)
  80007e2:	f001 fbed 	bl	8001fc0 <HAL_TIM_PWM_Start>
-// Mantenemos los LED encendidos por un tiempo
+	// Mantenemos los LED encendidos por un tiempo
 	HAL_Delay(TENCENDIDO); // Retardo de TENCENDIDO milisegundos
  80007e6:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
  80007ea:	f000 fc1f 	bl	800102c <HAL_Delay>
-// Apagamos los LED
+	// Apagamos los LED
 	TIM4->CCR1 = 0; // LED verde al 0 %
  80007ee:	4b0a      	ldr	r3, [pc, #40]	@ (8000818 <inicio+0x68>)
  80007f0:	2200      	movs	r2, #0
@@ -897,16 +879,15 @@ void inicio(void) {
  80007f4:	4b08      	ldr	r3, [pc, #32]	@ (8000818 <inicio+0x68>)
  80007f6:	2200      	movs	r2, #0
  80007f8:	639a      	str	r2, [r3, #56]	@ 0x38
-	TIM4->CCR4 = 0; // LED rojo al 0 %
+	TIM4->CCR4 = 0; // LED amarillo al 0 %
  80007fa:	4b07      	ldr	r3, [pc, #28]	@ (8000818 <inicio+0x68>)
  80007fc:	2200      	movs	r2, #0
  80007fe:	641a      	str	r2, [r3, #64]	@ 0x40
-// Mantenemos los LED apagados por un tiempo
-	HAL_Delay(TAPAGADO); // Retardo de TAPAGADO milisegundos
+
+	HAL_Delay(TAPAGADO);
  8000800:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
  8000804:	f000 fc12 	bl	800102c <HAL_Delay>
-//Encendemos el LED rojo
-	TIM4->CCR2 = ciclomaximo; // LED rojo al 100 %
+	TIM4->CCR2 = ciclomaximo;
  8000808:	4a03      	ldr	r2, [pc, #12]	@ (8000818 <inicio+0x68>)
  800080a:	88fb      	ldrh	r3, [r7, #6]
  800080c:	6393      	str	r3, [r2, #56]	@ 0x38
@@ -1030,11 +1011,11 @@ void Breathing(void) {
  80008cc:	f000 fbae 	bl	800102c <HAL_Delay>
 			ciclorojo = (ciclorojo > VALCAMBIO) ? ciclorojo - VALCAMBIO : 0;
  80008d0:	88fb      	ldrh	r3, [r7, #6]
- 80008d2:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 80008d2:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  80008d6:	bf38      	it	cc
- 80008d8:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 80008d8:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  80008dc:	b29b      	uxth	r3, r3
- 80008de:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 80008de:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  80008e2:	80fb      	strh	r3, [r7, #6]
 			TIM4->CCR2 = ciclorojo;
  80008e4:	4a3d      	ldr	r2, [pc, #244]	@ (80009dc <Breathing+0x14c>)
@@ -1047,13 +1028,16 @@ void Breathing(void) {
 			HAL_Delay(TCAMBIO);
  80008f0:	2064      	movs	r0, #100	@ 0x64
  80008f2:	f000 fb9b 	bl	800102c <HAL_Delay>
-			ciclorojo = (ciclorojo + VALCAMBIO < ciclomaximo) ? ciclorojo + VALCAMBIO : ciclomaximo;
+							ciclorojo + VALCAMBIO : ciclomaximo;
  80008f6:	883a      	ldrh	r2, [r7, #0]
+					(ciclorojo + VALCAMBIO < ciclomaximo) ?
  80008f8:	88fb      	ldrh	r3, [r7, #6]
- 80008fa:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 80008fa:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
+							ciclorojo + VALCAMBIO : ciclomaximo;
  80008fe:	4293      	cmp	r3, r2
  8000900:	bfa8      	it	ge
  8000902:	4613      	movge	r3, r2
+			ciclorojo =
  8000904:	80fb      	strh	r3, [r7, #6]
 			TIM4->CCR2 = ciclorojo;
  8000906:	4a35      	ldr	r2, [pc, #212]	@ (80009dc <Breathing+0x14c>)
@@ -1066,28 +1050,28 @@ void Breathing(void) {
  8000912:	d3ed      	bcc.n	80008f0 <Breathing+0x60>
 		break;
  8000914:	e05d      	b.n	80009d2 <Breathing+0x142>
-		TIM4->CCR1 = 0;
+		uint16_t cicloamarillo = TIM4->CCR4;
  8000916:	4b31      	ldr	r3, [pc, #196]	@ (80009dc <Breathing+0x14c>)
- 8000918:	2200      	movs	r2, #0
- 800091a:	635a      	str	r2, [r3, #52]	@ 0x34
-		TIM4->CCR2 = 0;
+ 8000918:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
+ 800091a:	80bb      	strh	r3, [r7, #4]
+		TIM4->CCR1 = 0;
  800091c:	4b2f      	ldr	r3, [pc, #188]	@ (80009dc <Breathing+0x14c>)
  800091e:	2200      	movs	r2, #0
- 8000920:	639a      	str	r2, [r3, #56]	@ 0x38
-		uint16_t cicloamarillo = TIM4->CCR4;
+ 8000920:	635a      	str	r2, [r3, #52]	@ 0x34
+		TIM4->CCR2 = 0;
  8000922:	4b2e      	ldr	r3, [pc, #184]	@ (80009dc <Breathing+0x14c>)
- 8000924:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
- 8000926:	80bb      	strh	r3, [r7, #4]
+ 8000924:	2200      	movs	r2, #0
+ 8000926:	639a      	str	r2, [r3, #56]	@ 0x38
 			HAL_Delay(TCAMBIO);
  8000928:	2064      	movs	r0, #100	@ 0x64
  800092a:	f000 fb7f 	bl	800102c <HAL_Delay>
-			cicloamarillo = (cicloamarillo > VALCAMBIO) ? cicloamarillo - VALCAMBIO : 0;
+			cicloamarillo =
  800092e:	88bb      	ldrh	r3, [r7, #4]
- 8000930:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000930:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000934:	bf38      	it	cc
- 8000936:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 8000936:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  800093a:	b29b      	uxth	r3, r3
- 800093c:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 800093c:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  8000940:	80bb      	strh	r3, [r7, #4]
 			TIM4->CCR4 = cicloamarillo;
  8000942:	4a26      	ldr	r2, [pc, #152]	@ (80009dc <Breathing+0x14c>)
@@ -1100,13 +1084,16 @@ void Breathing(void) {
 			HAL_Delay(TCAMBIO);
  800094e:	2064      	movs	r0, #100	@ 0x64
  8000950:	f000 fb6c 	bl	800102c <HAL_Delay>
-			cicloamarillo = (cicloamarillo + VALCAMBIO < ciclomaximo) ? cicloamarillo + VALCAMBIO : ciclomaximo;
+							cicloamarillo + VALCAMBIO : ciclomaximo;
  8000954:	883a      	ldrh	r2, [r7, #0]
+					(cicloamarillo + VALCAMBIO < ciclomaximo) ?
  8000956:	88bb      	ldrh	r3, [r7, #4]
- 8000958:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 8000958:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
+							cicloamarillo + VALCAMBIO : ciclomaximo;
  800095c:	4293      	cmp	r3, r2
  800095e:	bfa8      	it	ge
  8000960:	4613      	movge	r3, r2
+			cicloamarillo =
  8000962:	80bb      	strh	r3, [r7, #4]
 			TIM4->CCR4 = cicloamarillo;
  8000964:	4a1d      	ldr	r2, [pc, #116]	@ (80009dc <Breathing+0x14c>)
@@ -1119,28 +1106,28 @@ void Breathing(void) {
  8000970:	d3ed      	bcc.n	800094e <Breathing+0xbe>
 		break;
  8000972:	e02e      	b.n	80009d2 <Breathing+0x142>
-		TIM4->CCR4 = 0;
+		uint16_t cicloverde = TIM4->CCR1;
  8000974:	4b19      	ldr	r3, [pc, #100]	@ (80009dc <Breathing+0x14c>)
- 8000976:	2200      	movs	r2, #0
- 8000978:	641a      	str	r2, [r3, #64]	@ 0x40
-		TIM4->CCR2 = 0;
+ 8000976:	6b5b      	ldr	r3, [r3, #52]	@ 0x34
+ 8000978:	807b      	strh	r3, [r7, #2]
+		TIM4->CCR4 = 0;
  800097a:	4b18      	ldr	r3, [pc, #96]	@ (80009dc <Breathing+0x14c>)
  800097c:	2200      	movs	r2, #0
- 800097e:	639a      	str	r2, [r3, #56]	@ 0x38
-		uint16_t cicloverde = TIM4->CCR1;
+ 800097e:	641a      	str	r2, [r3, #64]	@ 0x40
+		TIM4->CCR2 = 0;
  8000980:	4b16      	ldr	r3, [pc, #88]	@ (80009dc <Breathing+0x14c>)
- 8000982:	6b5b      	ldr	r3, [r3, #52]	@ 0x34
- 8000984:	807b      	strh	r3, [r7, #2]
+ 8000982:	2200      	movs	r2, #0
+ 8000984:	639a      	str	r2, [r3, #56]	@ 0x38
 			HAL_Delay(TCAMBIO);
  8000986:	2064      	movs	r0, #100	@ 0x64
  8000988:	f000 fb50 	bl	800102c <HAL_Delay>
 			cicloverde = (cicloverde > VALCAMBIO) ? cicloverde - VALCAMBIO : 0;
  800098c:	887b      	ldrh	r3, [r7, #2]
- 800098e:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 800098e:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000992:	bf38      	it	cc
- 8000994:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 8000994:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  8000998:	b29b      	uxth	r3, r3
- 800099a:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 800099a:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  800099e:	807b      	strh	r3, [r7, #2]
 			TIM4->CCR1 = cicloverde;
  80009a0:	4a0e      	ldr	r2, [pc, #56]	@ (80009dc <Breathing+0x14c>)
@@ -1153,13 +1140,16 @@ void Breathing(void) {
 			HAL_Delay(TCAMBIO);
  80009ac:	2064      	movs	r0, #100	@ 0x64
  80009ae:	f000 fb3d 	bl	800102c <HAL_Delay>
-			cicloverde = (cicloverde + VALCAMBIO < ciclomaximo) ? cicloverde + VALCAMBIO : ciclomaximo;
+							cicloverde + VALCAMBIO : ciclomaximo;
  80009b2:	883a      	ldrh	r2, [r7, #0]
+					(cicloverde + VALCAMBIO < ciclomaximo) ?
  80009b4:	887b      	ldrh	r3, [r7, #2]
- 80009b6:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 80009b6:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
+							cicloverde + VALCAMBIO : ciclomaximo;
  80009ba:	4293      	cmp	r3, r2
  80009bc:	bfa8      	it	ge
  80009be:	4613      	movge	r3, r2
+			cicloverde =
  80009c0:	807b      	strh	r3, [r7, #2]
 			TIM4->CCR1 = cicloverde;
  80009c2:	4a06      	ldr	r2, [pc, #24]	@ (80009dc <Breathing+0x14c>)
@@ -1186,12 +1176,12 @@ void Breathing(void) {
 void CambiarBlink(void) {
  80009e4:	b580      	push	{r7, lr}
  80009e6:	af00      	add	r7, sp, #0
-    if (VerificarSW2()) {
+	if (VerificarSW2()) {
  80009e8:	f000 f958 	bl	8000c9c <VerificarSW2>
  80009ec:	4603      	mov	r3, r0
  80009ee:	2b00      	cmp	r3, #0
  80009f0:	d00f      	beq.n	8000a12 <CambiarBlink+0x2e>
-        x = (x + 1) % 5;
+		x = (x + 1) % 5;
  80009f2:	4b13      	ldr	r3, [pc, #76]	@ (8000a40 <CambiarBlink+0x5c>)
  80009f4:	881b      	ldrh	r3, [r3, #0]
  80009f6:	1c5a      	adds	r2, r3, #1
@@ -1207,14 +1197,14 @@ void CambiarBlink(void) {
  8000a0c:	b28a      	uxth	r2, r1
  8000a0e:	4b0c      	ldr	r3, [pc, #48]	@ (8000a40 <CambiarBlink+0x5c>)
  8000a10:	801a      	strh	r2, [r3, #0]
-    }
+	}
 
-    if (VerificarSW3()) {
+	if (VerificarSW3()) {
  8000a12:	f000 f973 	bl	8000cfc <VerificarSW3>
  8000a16:	4603      	mov	r3, r0
  8000a18:	2b00      	cmp	r3, #0
  8000a1a:	d00f      	beq.n	8000a3c <CambiarBlink+0x58>
-        x = (x - 1) % 5; // evita negativos
+		x = (x - 1) % 5;
  8000a1c:	4b08      	ldr	r3, [pc, #32]	@ (8000a40 <CambiarBlink+0x5c>)
  8000a1e:	881b      	ldrh	r3, [r3, #0]
  8000a20:	1e5a      	subs	r2, r3, #1
@@ -1230,7 +1220,7 @@ void CambiarBlink(void) {
  8000a36:	b28a      	uxth	r2, r1
  8000a38:	4b01      	ldr	r3, [pc, #4]	@ (8000a40 <CambiarBlink+0x5c>)
  8000a3a:	801a      	strh	r2, [r3, #0]
-    }
+	}
 }
  8000a3c:	bf00      	nop
  8000a3e:	bd80      	pop	{r7, pc}
@@ -1244,12 +1234,12 @@ void Blink(void) {
  8000a4a:	b082      	sub	sp, #8
  8000a4c:	af00      	add	r7, sp, #0
 
-    uint16_t intensidad;
+	uint16_t intensidad;
 
-    CambiarBlink();
+	CambiarBlink();
  8000a4e:	f7ff ffc9 	bl	80009e4 <CambiarBlink>
 
-    switch(x) {
+	switch (x) {
  8000a52:	4b21      	ldr	r3, [pc, #132]	@ (8000ad8 <Blink+0x90>)
  8000a54:	881b      	ldrh	r3, [r3, #0]
  8000a56:	2b04      	cmp	r3, #4
@@ -1261,59 +1251,71 @@ void Blink(void) {
  8000a68:	08000a85 	.word	0x08000a85
  8000a6c:	08000a8d 	.word	0x08000a8d
  8000a70:	08000a95 	.word	0x08000a95
-        case 0: intensidad = 12800; break;   // 20%
+	case 0:
+		intensidad = 12800;
  8000a74:	f44f 5348 	mov.w	r3, #12800	@ 0x3200
  8000a78:	80fb      	strh	r3, [r7, #6]
+		break;   // 20%
  8000a7a:	e00f      	b.n	8000a9c <Blink+0x54>
-        case 1: intensidad = 25600; break;   // 40%
+	case 1:
+		intensidad = 25600;
  8000a7c:	f44f 43c8 	mov.w	r3, #25600	@ 0x6400
  8000a80:	80fb      	strh	r3, [r7, #6]
+		break;   // 40%
  8000a82:	e00b      	b.n	8000a9c <Blink+0x54>
-        case 2: intensidad = 38400; break;   // 60%
+	case 2:
+		intensidad = 38400;
  8000a84:	f44f 4316 	mov.w	r3, #38400	@ 0x9600
  8000a88:	80fb      	strh	r3, [r7, #6]
+		break;   // 60%
  8000a8a:	e007      	b.n	8000a9c <Blink+0x54>
-        case 3: intensidad = 51200; break;   // 80%
+	case 3:
+		intensidad = 51200;
  8000a8c:	f44f 4348 	mov.w	r3, #51200	@ 0xc800
  8000a90:	80fb      	strh	r3, [r7, #6]
+		break;   // 80%
  8000a92:	e003      	b.n	8000a9c <Blink+0x54>
-        case 4: intensidad = 64000; break;   // 100%
+	case 4:
+		intensidad = 64000;
  8000a94:	f44f 437a 	mov.w	r3, #64000	@ 0xfa00
  8000a98:	80fb      	strh	r3, [r7, #6]
+		break;   // 100%
  8000a9a:	bf00      	nop
-    }
+	}
 
-    TIM4->CCR1 = intensidad;
+	//Encendemos los LEDs a la intensidad establecida
+	TIM4->CCR1 = intensidad;
  8000a9c:	4a0f      	ldr	r2, [pc, #60]	@ (8000adc <Blink+0x94>)
  8000a9e:	88fb      	ldrh	r3, [r7, #6]
  8000aa0:	6353      	str	r3, [r2, #52]	@ 0x34
-    TIM4->CCR2 = intensidad;
+	TIM4->CCR2 = intensidad;
  8000aa2:	4a0e      	ldr	r2, [pc, #56]	@ (8000adc <Blink+0x94>)
  8000aa4:	88fb      	ldrh	r3, [r7, #6]
  8000aa6:	6393      	str	r3, [r2, #56]	@ 0x38
-    TIM4->CCR4 = intensidad;
+	TIM4->CCR4 = intensidad;
  8000aa8:	4a0c      	ldr	r2, [pc, #48]	@ (8000adc <Blink+0x94>)
  8000aaa:	88fb      	ldrh	r3, [r7, #6]
  8000aac:	6413      	str	r3, [r2, #64]	@ 0x40
 
-    HAL_Delay(300);
+	HAL_Delay(300); //Esperamos 300ms
  8000aae:	f44f 7096 	mov.w	r0, #300	@ 0x12c
  8000ab2:	f000 fabb 	bl	800102c <HAL_Delay>
 
-    TIM4->CCR1 = 0;
+	//Apagamos todos los LEDs
+	TIM4->CCR1 = 0;
  8000ab6:	4b09      	ldr	r3, [pc, #36]	@ (8000adc <Blink+0x94>)
  8000ab8:	2200      	movs	r2, #0
  8000aba:	635a      	str	r2, [r3, #52]	@ 0x34
-    TIM4->CCR2 = 0;
+	TIM4->CCR2 = 0;
  8000abc:	4b07      	ldr	r3, [pc, #28]	@ (8000adc <Blink+0x94>)
  8000abe:	2200      	movs	r2, #0
  8000ac0:	639a      	str	r2, [r3, #56]	@ 0x38
-    TIM4->CCR4 = 0;
+	TIM4->CCR4 = 0;
  8000ac2:	4b06      	ldr	r3, [pc, #24]	@ (8000adc <Blink+0x94>)
  8000ac4:	2200      	movs	r2, #0
  8000ac6:	641a      	str	r2, [r3, #64]	@ 0x40
 
-    HAL_Delay(300);
+	HAL_Delay(300);
  8000ac8:	f44f 7096 	mov.w	r0, #300	@ 0x12c
  8000acc:	f000 faae 	bl	800102c <HAL_Delay>
 }
@@ -1339,7 +1341,7 @@ void transicionRA(void) {
  8000aec:	4b18      	ldr	r3, [pc, #96]	@ (8000b50 <transicionRA+0x70>)
  8000aee:	6b9b      	ldr	r3, [r3, #56]	@ 0x38
  8000af0:	80fb      	strh	r3, [r7, #6]
-	uint16_t cicloamarillo = TIM4->CCR4; // Valor actual de ciclo de trabajo en LED verde
+	uint16_t cicloamarillo = TIM4->CCR4; // Valor actual de ciclo de trabajo en LED amarillo
  8000af2:	4b17      	ldr	r3, [pc, #92]	@ (8000b50 <transicionRA+0x70>)
  8000af4:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
  8000af6:	80bb      	strh	r3, [r7, #4]
@@ -1350,33 +1352,33 @@ void transicionRA(void) {
 		// Disminuimos un poco la intensidad del LED rojo
 		ciclorojo = (ciclorojo > VALCAMBIO) ? ciclorojo - VALCAMBIO : 0; // Decremento con saturación en 0 %
  8000afe:	88fb      	ldrh	r3, [r7, #6]
- 8000b00:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000b00:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000b04:	bf38      	it	cc
- 8000b06:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 8000b06:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  8000b0a:	b29b      	uxth	r3, r3
- 8000b0c:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 8000b0c:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  8000b10:	80fb      	strh	r3, [r7, #6]
 		TIM4->CCR2 = ciclorojo; // Actualiza el ciclo de trabajo en LED rojo
  8000b12:	4a0f      	ldr	r2, [pc, #60]	@ (8000b50 <transicionRA+0x70>)
  8000b14:	88fb      	ldrh	r3, [r7, #6]
  8000b16:	6393      	str	r3, [r2, #56]	@ 0x38
-		// Aumentaqmos un poco la intensidad del LED verde
+		// Aumentaqmos un poco la intensidad del LED amarillo
 		cicloamarillo =
 				(ciclomaximo - cicloamarillo > VALCAMBIO) ?
  8000b18:	887a      	ldrh	r2, [r7, #2]
  8000b1a:	88bb      	ldrh	r3, [r7, #4]
  8000b1c:	1ad3      	subs	r3, r2, r3
 		cicloamarillo =
- 8000b1e:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000b1e:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000b22:	dd04      	ble.n	8000b2e <transicionRA+0x4e>
  8000b24:	88bb      	ldrh	r3, [r7, #4]
- 8000b26:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 8000b26:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
  8000b2a:	b29b      	uxth	r3, r3
  8000b2c:	e000      	b.n	8000b30 <transicionRA+0x50>
  8000b2e:	887b      	ldrh	r3, [r7, #2]
  8000b30:	80bb      	strh	r3, [r7, #4]
 						cicloamarillo + VALCAMBIO : ciclomaximo; // Incremento con saturación en 100 %
-		TIM4->CCR4 = cicloamarillo; // Actualiza el ciclo de trabajo en LED verde
+		TIM4->CCR4 = cicloamarillo; // Actualiza el ciclo de trabajo en LED amarillo
  8000b32:	4a07      	ldr	r2, [pc, #28]	@ (8000b50 <transicionRA+0x70>)
  8000b34:	88bb      	ldrh	r3, [r7, #4]
  8000b36:	6413      	str	r3, [r2, #64]	@ 0x40
@@ -1408,11 +1410,11 @@ void transicionAV(void) {
  8000b5a:	4b1a      	ldr	r3, [pc, #104]	@ (8000bc4 <transicionAV+0x70>)
  8000b5c:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
  8000b5e:	807b      	strh	r3, [r7, #2]
-	uint16_t cicloverde = TIM4->CCR1; // Valor actual de ciclo de trabajo en LED rojo
+	uint16_t cicloverde = TIM4->CCR1; // Valor actual de ciclo de trabajo en LED verde
  8000b60:	4b18      	ldr	r3, [pc, #96]	@ (8000bc4 <transicionAV+0x70>)
  8000b62:	6b5b      	ldr	r3, [r3, #52]	@ 0x34
  8000b64:	80fb      	strh	r3, [r7, #6]
-	uint16_t cicloamarillo = TIM4->CCR4; // Valor actual de ciclo de trabajo en LED verde
+	uint16_t cicloamarillo = TIM4->CCR4; // Valor actual de ciclo de trabajo en LED amarillo
  8000b66:	4b17      	ldr	r3, [pc, #92]	@ (8000bc4 <transicionAV+0x70>)
  8000b68:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
  8000b6a:	80bb      	strh	r3, [r7, #4]
@@ -1420,14 +1422,14 @@ void transicionAV(void) {
 		HAL_Delay(TCAMBIO); // Espera por TCAMBIO milisegndos
  8000b6c:	2064      	movs	r0, #100	@ 0x64
  8000b6e:	f000 fa5d 	bl	800102c <HAL_Delay>
-		// Disminuimos un poco la intensidad del LED rojo
+		// Disminuimos un poco la intensidad del LED amarillo
 		cicloamarillo =
  8000b72:	88bb      	ldrh	r3, [r7, #4]
- 8000b74:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000b74:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000b78:	bf38      	it	cc
- 8000b7a:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 8000b7a:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  8000b7e:	b29b      	uxth	r3, r3
- 8000b80:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 8000b80:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  8000b84:	80bb      	strh	r3, [r7, #4]
 				(cicloamarillo > VALCAMBIO) ? cicloamarillo - VALCAMBIO : 0; // Decremento con saturación en 0 %
 		TIM4->CCR4 = cicloamarillo; // Actualiza el ciclo de trabajo en LED rojo
@@ -1441,10 +1443,10 @@ void transicionAV(void) {
  8000b8e:	88fb      	ldrh	r3, [r7, #6]
  8000b90:	1ad3      	subs	r3, r2, r3
 		cicloverde =
- 8000b92:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000b92:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000b96:	dd04      	ble.n	8000ba2 <transicionAV+0x4e>
  8000b98:	88fb      	ldrh	r3, [r7, #6]
- 8000b9a:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 8000b9a:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
  8000b9e:	b29b      	uxth	r3, r3
  8000ba0:	e000      	b.n	8000ba4 <transicionAV+0x50>
  8000ba2:	887b      	ldrh	r3, [r7, #2]
@@ -1496,36 +1498,36 @@ void transicionVR(void) {
 		HAL_Delay(TCAMBIO); // Espera por TCAMBIO milisegndos
  8000be0:	2064      	movs	r0, #100	@ 0x64
  8000be2:	f000 fa23 	bl	800102c <HAL_Delay>
-		// Disminuimos un poco la intensidad del LED rojo
+		// Disminuimos un poco la intensidad del LED verde
 		cicloverde = (cicloverde > VALCAMBIO) ? cicloverde - VALCAMBIO : 0; // Decremento con saturación en 0 %
  8000be6:	88fb      	ldrh	r3, [r7, #6]
- 8000be8:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000be8:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000bec:	bf38      	it	cc
- 8000bee:	f44f 53c8 	movcc.w	r3, #6400	@ 0x1900
+ 8000bee:	f44f 537a 	movcc.w	r3, #16000	@ 0x3e80
  8000bf2:	b29b      	uxth	r3, r3
- 8000bf4:	f5a3 53c8 	sub.w	r3, r3, #6400	@ 0x1900
+ 8000bf4:	f5a3 537a 	sub.w	r3, r3, #16000	@ 0x3e80
  8000bf8:	80fb      	strh	r3, [r7, #6]
-		TIM4->CCR1 = cicloverde; // Actualiza el ciclo de trabajo en LED rojo
+		TIM4->CCR1 = cicloverde; // Actualiza el ciclo de trabajo en LED verde
  8000bfa:	4a0f      	ldr	r2, [pc, #60]	@ (8000c38 <transicionVR+0x70>)
  8000bfc:	88fb      	ldrh	r3, [r7, #6]
  8000bfe:	6353      	str	r3, [r2, #52]	@ 0x34
-		// Aumentaqmos un poco la intensidad del LED verde
+		// Aumentaqmos un poco la intensidad del LED rojo
 		ciclorojo =
 				(ciclomaximo - ciclorojo > VALCAMBIO) ?
  8000c00:	887a      	ldrh	r2, [r7, #2]
  8000c02:	88bb      	ldrh	r3, [r7, #4]
  8000c04:	1ad3      	subs	r3, r2, r3
 		ciclorojo =
- 8000c06:	f5b3 5fc8 	cmp.w	r3, #6400	@ 0x1900
+ 8000c06:	f5b3 5f7a 	cmp.w	r3, #16000	@ 0x3e80
  8000c0a:	dd04      	ble.n	8000c16 <transicionVR+0x4e>
  8000c0c:	88bb      	ldrh	r3, [r7, #4]
- 8000c0e:	f503 53c8 	add.w	r3, r3, #6400	@ 0x1900
+ 8000c0e:	f503 537a 	add.w	r3, r3, #16000	@ 0x3e80
  8000c12:	b29b      	uxth	r3, r3
  8000c14:	e000      	b.n	8000c18 <transicionVR+0x50>
  8000c16:	887b      	ldrh	r3, [r7, #2]
  8000c18:	80bb      	strh	r3, [r7, #4]
 						ciclorojo + VALCAMBIO : ciclomaximo; // Incremento con saturación en 100 %
-		TIM4->CCR2 = ciclorojo; // Actualiza el ciclo de trabajo en LED verde
+		TIM4->CCR2 = ciclorojo; // Actualiza el ciclo de trabajo en LED rojo
  8000c1a:	4a07      	ldr	r2, [pc, #28]	@ (8000c38 <transicionVR+0x70>)
  8000c1c:	88bb      	ldrh	r3, [r7, #4]
  8000c1e:	6393      	str	r3, [r2, #56]	@ 0x38

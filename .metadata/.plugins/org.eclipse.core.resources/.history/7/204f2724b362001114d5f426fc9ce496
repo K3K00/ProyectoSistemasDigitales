@@ -34,24 +34,32 @@
 #define TENCENDIDO 2000
 #define TAPAGADO 1000
 #define TCAMBIO 100
-#define VALCAMBIO 16000 //Variable de cambio
+#define VALCAMBIO 6400
 #define TREBOTES 20  // intervalo de rebotes en ms
 
+/* USER CODE END PD */
 
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim4;
 
+/* USER CODE BEGIN PV */
 uint16_t x = 0;
+/* USER CODE END PV */
 
+/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM4_Init(void);
-
+/* USER CODE BEGIN PFP */
 void inicio(void); // Prueba inicial del sistema
-// Verificación de botones
 bool VerificarSW1(void);
 bool VerificarSW2(void);
 bool VerificarSW3(void);
-// Funciones del programa
 void Breathing(void);
 void transicionRA(void);
 void transicionAV(void);
@@ -61,12 +69,17 @@ void CambiarLed(void);
 void CambiarBlink(void);
 void Blink(void);
 
-// Vector de estados que contiene los distintos modos
 typedef enum {
 	Modo_Breathing, Modo_Crossfade, Modo_blink
 } Modo_t;
 static Modo_t modo_actual = Modo_Breathing;
 
+/* USER CODE END 0 */
+
+/**
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void) {
 
 	HAL_Init();
@@ -95,6 +108,10 @@ int main(void) {
 	}
 }
 
+/**
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void) {
 	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
