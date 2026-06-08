@@ -41,6 +41,7 @@
 TIM_HandleTypeDef htim4;
 
 uint16_t x = 0;
+uint16_t y = 0;
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -335,11 +336,11 @@ void Breathing(void) {
 
 void CambiarBlink(void) {
 	if (VerificarSW2()) {
-		x = (x + 1) % 5;
+		y = (y + 1) % 5;
 	}
 
 	if (VerificarSW3()) {
-		x = (x - 1) % 5;
+		y = (y - 1) % 5;
 	}
 }
 
@@ -349,7 +350,7 @@ void Blink(void) {
 
 	CambiarBlink();
 
-	switch (x) {
+	switch (y) {
 	case 0:
 		intensidad = 12800;
 		break;   // 20%
@@ -458,7 +459,7 @@ bool VerificarSW1(void) {
 		if (ultima_lectura_valida == GPIO_PIN_RESET) //Si la última lectura es igual a 0.
 			pedido = true;
 	}
-	return pedido; // Devuelve a VerificarSW2 si se presiono o no el botón.
+	return pedido; // Devuelve a VerificarSW1 si se presiono o no el botón.
 }
 
 bool VerificarSW2(void) {
@@ -477,7 +478,7 @@ bool VerificarSW2(void) {
 		if (ultima_lectura_valida == GPIO_PIN_RESET) //Si la última lectura es igual a 0.
 			pedido = true;
 	}
-	return pedido; // Devuelve a VerificarSW1 si se presiono o no el botón.
+	return pedido; // Devuelve a VerificarSW2 si se presiono o no el botón.
 }
 
 bool VerificarSW3(void) {

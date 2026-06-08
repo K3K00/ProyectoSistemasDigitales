@@ -23,31 +23,31 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   9 .ccmram       00000000  10000000  10000000  00004010  2**0
                   CONTENTS
- 10 .bss          0000006c  20000010  20000010  00004010  2**2
+ 10 .bss          00000070  20000010  20000010  00004010  2**2
                   ALLOC
- 11 ._user_heap_stack 00000604  2000007c  2000007c  00004010  2**0
+ 11 ._user_heap_stack 00000600  20000080  20000080  00004010  2**0
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  00004010  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000086ab  00000000  00000000  00004040  2**0
+ 13 .debug_info   000086b8  00000000  00000000  00004040  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001523  00000000  00000000  0000c6eb  2**0
+ 14 .debug_abbrev 0000153e  00000000  00000000  0000c6f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 000009c0  00000000  00000000  0000dc10  2**3
+ 15 .debug_aranges 000009c0  00000000  00000000  0000dc38  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00000785  00000000  00000000  0000e5d0  2**0
+ 16 .debug_rnglists 00000785  00000000  00000000  0000e5f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0001fbde  00000000  00000000  0000ed55  2**0
+ 17 .debug_macro  0001fbde  00000000  00000000  0000ed7d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000a5fe  00000000  00000000  0002e933  2**0
+ 18 .debug_line   0000a5fe  00000000  00000000  0002e95b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c5032  00000000  00000000  00038f31  2**0
+ 19 .debug_str    000c5032  00000000  00000000  00038f59  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000fdf63  2**0
+ 20 .comment      00000043  00000000  00000000  000fdf8b  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  000026a8  00000000  00000000  000fdfa8  2**2
+ 21 .debug_frame  000026a8  00000000  00000000  000fdfd0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 0000006a  00000000  00000000  00100650  2**0
+ 22 .debug_line_str 0000006a  00000000  00000000  00100678  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -372,11 +372,11 @@ Disassembly of section .text:
  80004f2:	bf00      	nop
 
 080004f4 <main>:
+typedef enum {
+	Modo_Breathing, Modo_Crossfade, Modo_blink
+} Modo_t;
+static Modo_t modo_actual = Modo_Breathing;
 
-/**
- * @brief  The application entry point.
- * @retval int
- */
 int main(void) {
  80004f4:	b580      	push	{r7, lr}
  80004f6:	af00      	add	r7, sp, #0
@@ -432,14 +432,13 @@ int main(void) {
 		CambiarModo();
  8000544:	e7e2      	b.n	800050c <main+0x18>
  8000546:	bf00      	nop
- 8000548:	20000076 	.word	0x20000076
+ 8000548:	20000078 	.word	0x20000078
 
 0800054c <SystemClock_Config>:
+		}
+	}
+}
 
-/**
- * @brief System Clock Configuration
- * @retval None
- */
 void SystemClock_Config(void) {
  800054c:	b580      	push	{r7, lr}
  800054e:	b094      	sub	sp, #80	@ 0x50
@@ -929,7 +928,7 @@ void CambiarModo(void) {
 }
  800084c:	bf00      	nop
  800084e:	bd80      	pop	{r7, pc}
- 8000850:	20000076 	.word	0x20000076
+ 8000850:	20000078 	.word	0x20000078
  8000854:	55555556 	.word	0x55555556
 
 08000858 <CambiarLed>:
@@ -1181,7 +1180,7 @@ void CambiarBlink(void) {
  80009ec:	4603      	mov	r3, r0
  80009ee:	2b00      	cmp	r3, #0
  80009f0:	d00f      	beq.n	8000a12 <CambiarBlink+0x2e>
-		x = (x + 1) % 5;
+		y = (y + 1) % 5;
  80009f2:	4b13      	ldr	r3, [pc, #76]	@ (8000a40 <CambiarBlink+0x5c>)
  80009f4:	881b      	ldrh	r3, [r3, #0]
  80009f6:	1c5a      	adds	r2, r3, #1
@@ -1204,7 +1203,7 @@ void CambiarBlink(void) {
  8000a16:	4603      	mov	r3, r0
  8000a18:	2b00      	cmp	r3, #0
  8000a1a:	d00f      	beq.n	8000a3c <CambiarBlink+0x58>
-		x = (x - 1) % 5;
+		y = (y - 1) % 5;
  8000a1c:	4b08      	ldr	r3, [pc, #32]	@ (8000a40 <CambiarBlink+0x5c>)
  8000a1e:	881b      	ldrh	r3, [r3, #0]
  8000a20:	1e5a      	subs	r2, r3, #1
@@ -1224,7 +1223,7 @@ void CambiarBlink(void) {
 }
  8000a3c:	bf00      	nop
  8000a3e:	bd80      	pop	{r7, pc}
- 8000a40:	20000074 	.word	0x20000074
+ 8000a40:	20000076 	.word	0x20000076
  8000a44:	66666667 	.word	0x66666667
 
 08000a48 <Blink>:
@@ -1239,7 +1238,7 @@ void Blink(void) {
 	CambiarBlink();
  8000a4e:	f7ff ffc9 	bl	80009e4 <CambiarBlink>
 
-	switch (x) {
+	switch (y) {
  8000a52:	4b21      	ldr	r3, [pc, #132]	@ (8000ad8 <Blink+0x90>)
  8000a54:	881b      	ldrh	r3, [r3, #0]
  8000a56:	2b04      	cmp	r3, #4
@@ -1323,7 +1322,7 @@ void Blink(void) {
  8000ad2:	3708      	adds	r7, #8
  8000ad4:	46bd      	mov	sp, r7
  8000ad6:	bd80      	pop	{r7, pc}
- 8000ad8:	20000074 	.word	0x20000074
+ 8000ad8:	20000076 	.word	0x20000076
  8000adc:	40000800 	.word	0x40000800
 
 08000ae0 <transicionRA>:
@@ -1601,7 +1600,7 @@ bool VerificarSW1(void) {
  8000c84:	2301      	movs	r3, #1
  8000c86:	71fb      	strb	r3, [r7, #7]
 	}
-	return pedido; // Devuelve a VerificarSW2 si se presiono o no el botón.
+	return pedido; // Devuelve a VerificarSW1 si se presiono o no el botón.
  8000c88:	79fb      	ldrb	r3, [r7, #7]
 }
  8000c8a:	4618      	mov	r0, r3
@@ -1665,7 +1664,7 @@ bool VerificarSW2(void) {
  8000ce4:	2301      	movs	r3, #1
  8000ce6:	71fb      	strb	r3, [r7, #7]
 	}
-	return pedido; // Devuelve a VerificarSW1 si se presiono o no el botón.
+	return pedido; // Devuelve a VerificarSW2 si se presiono o no el botón.
  8000ce8:	79fb      	ldrb	r3, [r7, #7]
 }
  8000cea:	4618      	mov	r0, r3
@@ -2234,7 +2233,7 @@ LoopFillZerobss:
   ldr r2, =_sbss
  8000f3c:	20000010 	.word	0x20000010
   ldr r4, =_ebss
- 8000f40:	2000007c 	.word	0x2000007c
+ 8000f40:	20000080 	.word	0x20000080
 
 08000f44 <ADC_IRQHandler>:
  * @retval None       
@@ -2397,7 +2396,7 @@ __weak void HAL_IncTick(void)
  8001008:	4770      	bx	lr
  800100a:	bf00      	nop
  800100c:	2000000c 	.word	0x2000000c
- 8001010:	20000078 	.word	0x20000078
+ 8001010:	2000007c 	.word	0x2000007c
 
 08001014 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other 
@@ -2417,7 +2416,7 @@ __weak uint32_t HAL_GetTick(void)
  8001020:	f85d 7b04 	ldr.w	r7, [sp], #4
  8001024:	4770      	bx	lr
  8001026:	bf00      	nop
- 8001028:	20000078 	.word	0x20000078
+ 8001028:	2000007c 	.word	0x2000007c
 
 0800102c <HAL_Delay>:
   *       implementations in user file.
